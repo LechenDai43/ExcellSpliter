@@ -1,5 +1,7 @@
 package org.ExcellSpliter.ExcelProcessor;
 
+import java.util.Date;
+
 public class ExcelTester {
     private static void readerTester() {
         ExcelReader er = new ExcelReader("test1.xls");
@@ -17,6 +19,7 @@ public class ExcelTester {
     }
 
     public static void main(String[] args) {
-        readerTester();
+        //readerTester();
+        System.out.println(new Date("8/2/2019"));
     }
 }
