@@ -1,8 +1,6 @@
-package org.ExcellSpliter.ExcelProcessor;
+package org.ExcellSplitter.ExcelProcessor;
 
-import jxl.Cell;
 import jxl.Workbook;
-import jxl.read.biff.BiffException;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ExcellSpliter.iml" filepath="$PROJECT_DIR$/ExcellSpliter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExcellSplitter.iml" filepath="$PROJECT_DIR$/ExcellSplitter.iml" />
     </modules>
   </component>
 </project>

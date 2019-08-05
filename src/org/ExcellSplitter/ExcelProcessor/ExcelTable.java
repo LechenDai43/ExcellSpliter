@@ -1,6 +1,5 @@
-package org.ExcellSpliter.ExcelProcessor;
+package org.ExcellSplitter.ExcelProcessor;
 
-import jxl.Cell;
 import jxl.write.DateTime;
 import jxl.write.Label;
 import jxl.write.Number;

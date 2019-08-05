@@ -1,4 +1,4 @@
-package org.ExcellSpliter.ExcelProcessor;
+package org.ExcellSplitter.ExcelProcessor;
 
 import java.util.Date;
 

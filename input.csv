@@ -1,0 +1,11 @@
+id,medicine1,medicine2,medicine3
+1,"a,q,w,s,x","r,f,g,b,y,h,n","u,j,m,k,p"
+2,"z,s,w,e,a,d","r,f,v,t,g","m,k,l,p"
+3,"q,a,z,w,x,d","t,g,b,h,n","u,j,m,I,k,o,p"
+4,"a,s,e,d,c",,"I,k,o,p"
+5,,"r,f,g,h","u,j,m,I,k,o,p"
+6,"q,a,z,w,s,x,e,d,c",,"j,m,I,p"
+7,"q,z,w,s,x,d","r,g,n","o,l,p"
+8,"q,a,s,d,c","r,f,v,t,g,b,y,h,n","j,k,o"
+9,"z,w,s,e,c","y,h,j","u,j,m,I,k,o,p"
+10,"z,e,d,s","u,j,m","u,k,I,o,p"

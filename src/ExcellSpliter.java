@@ -1,7 +1,9 @@
 import jxl.write.WriteException;
-import org.ExcellSpliter.ExcelProcessor.ExcelGenerator;
-import org.ExcellSpliter.ExcelProcessor.ExcelReader;
-import org.ExcellSpliter.ExcelProcessor.ExcelTable;
+import org.ExcellSplitter.CSVFileOrganizer.CSVOrganizer;
+import org.ExcellSplitter.ExcelProcessor.ExcelGenerator;
+import org.ExcellSplitter.ExcelProcessor.ExcelReader;
+import org.ExcellSplitter.ExcelProcessor.ExcelTable;
+import org.ExcellSplitter.GUI.ESFrame;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -101,14 +103,19 @@ public class ExcellSpliter {
     }
 
     public static void main (String[] args) throws IOException, WriteException {
-        ExcelReader er = new ExcelReader("input.xls");
-        ExcelGenerator eg = new ExcelGenerator("output.xls");
-        er.readSheet(0);
-        int[] indeces = new int[]{1, 2, 3};
-        String[][] content = er.getSheet();
-        ArrayList<ArrayList<String>> arrCon = spliteCells(content, indeces, ",");
+//        ExcelReader er = new ExcelReader("input.xls");
+        ExcelGenerator eg = new ExcelGenerator("new_output.xls");
+//        er.readSheet(0);
+//        int[] indices = new int[]{1, 2, 3};
+//        String[][] content = er.getSheet();
+//        ArrayList<ArrayList<String>> arrCon = spliteCells(content, indices, ",");
+//        ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
+//        tableArr.add(toTable(arrCon, content, indices));
+//        eg.createFile(tableArr);
+        CSVOrganizer organizer = new CSVOrganizer("input.csv");
+        organizer.process(1);
         ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
-        tableArr.add(toTable(arrCon, content, indeces));
+        tableArr.add(organizer.exportAsExcelTable());
         eg.createFile(tableArr);
     }
 }
