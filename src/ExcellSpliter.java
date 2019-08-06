@@ -151,10 +151,6 @@ public class ExcellSpliter extends Application {
             i++;
         }
         String[][] content = er.getSheet();
-        System.out.println(indices.length);
-        for (int x=0; x<indices.length;x++){
-            System.out.print(indices[x] +", ");
-        }
         ArrayList<ArrayList<String>> arrCon = CellSplitor.spliteCells(content, indices, delimiter);
         ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
         tableArr.add(CellSplitor.toTable(arrCon, content, indices));

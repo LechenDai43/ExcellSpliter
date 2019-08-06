@@ -181,7 +181,6 @@ public class ExcelTable {
 
     public void addCell (int r, int c, String str) {
         if (r >= content.size() || c >= tags.size()) {
-            System.out.println(r + " " + content.size() + "," + c + " " + tags.size());
             throw new IndexOutOfBoundsException("Row index or column index is too large.");
         }
         content.get(r).set(c, str);
