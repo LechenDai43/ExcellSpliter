@@ -1,110 +1,44 @@
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import jxl.write.WriteException;
 import org.ExcellSplitter.CSVFileOrganizer.CSVOrganizer;
+import org.ExcellSplitter.ExcelProcessor.CellSplitor;
 import org.ExcellSplitter.ExcelProcessor.ExcelGenerator;
 import org.ExcellSplitter.ExcelProcessor.ExcelReader;
 import org.ExcellSplitter.ExcelProcessor.ExcelTable;
-import org.ExcellSplitter.GUI.ESFrame;
-
+import javafx.scene.control.Button;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
-public class ExcellSpliter {
-
-    public static ArrayList<ArrayList<String>> spliteCell (String[][] content, int index, String delimiter) {
-        HashMap<String, Integer> tags = new HashMap<>();
-        ArrayList<ArrayList<String>> result = new ArrayList<>();
-        result.add(new ArrayList<String>());
-        String root = content[0][index] + "-";
-        int pos = 0;
-        for (int i = 1; i < content.length; i++) {
-            String whole = content[i][index];
-            StringTokenizer st = new StringTokenizer(whole, delimiter);
-            HashMap<Integer, String> rowIndex = new HashMap<>();
-            while (st.hasMoreTokens()) {
-                String token = st.nextToken();
-                if (tags.containsKey(token)) {
-                    rowIndex.put(tags.get(token), token);
-                } else {
-                    tags.put(token, pos);
-                    rowIndex.put(pos, token);
-                    pos++;
-                    result.get(0).add(root + token);
-                }
-            }
-            ArrayList<String> row = new ArrayList<>();
-            for (int j = 0; j < result.get(0).size(); j++) {
-                if (rowIndex.containsKey(j)) {
-                    row.add(rowIndex.get(j));
-                } else {
-                    row.add("");
-                }
-            }
-            result.add(row);
-        }
-        for (int i = 1; i < result.size(); i++) {
-            if (result.get(i).size() < result.get(0).size()) {
-                while (result.get(i).size() < result.get(0).size()) {
-                    result.get(i).add("");
-                }
-            }
-        }
-        return result;
-    }
-
-    public static ArrayList<ArrayList<String>> spliteCells (String[][] content, int[] indices, String delimiter) {
-        if (indices == null || indices.length < 1) {
-            throw new IllegalArgumentException("There must be at least one index.");
-        }
-        if (content == null) {
-            throw new NullPointerException("The content cannot be null.");
-        }
-        ArrayList<ArrayList<String>> result = spliteCell(content, indices[0], delimiter);
-        for (int i = 1; i < indices.length; i++) {
-            ArrayList<ArrayList<String>> tem = spliteCell(content, indices[i], delimiter);
-            for (int j = 0; j < result.size(); j++) {
-                result.get(j).addAll(tem.get(j));
-            }
-        }
-        return result;
-    }
-
-    public static ExcelTable toTable (ArrayList<ArrayList<String>> arr, String[][] content, int[] indices) {
-        ExcelTable table = new ExcelTable();
-        HashSet<Integer> indexSet = new HashSet<>();
-        for (int i = 0; i < indices.length; i++) {
-            indexSet.add(indices[i]);
-        }
-        ArrayList<String> basicTags = new ArrayList<>();
-        for (int i = 0; i < content[0].length; i++) {
-            if (!indexSet.contains(i)) {
-                basicTags.add(content[0][i]);
-            }
-        }
-        table.addColumns(basicTags);
-        table.addRows(content.length - 1);
-        table.addColumns(arr.get(0));
-        for (int i = 1; i < content.length; i++) {
-            int colNum = 0;
-            for (int j = 0; j < content[i].length; j++) {
-                if (!indexSet.contains(j)) {
-                    table.addCell(i - 1, colNum, content[i][j]);
-                    colNum++;
-                }
-            }
-            for (int j = 0; j < arr.get(i).size(); j++) {
-                table.addCell(i - 1, colNum, arr.get(i).get(j));
-                colNum++;
-            }
-        }
-        return table;
-    }
+public class ExcellSpliter extends Application {
+    private File file;
+    private Button bt1 = new Button("Choose Input File");
+    private Button bt2 = new Button("Start Splitting");
+    private Label label = new Label(),
+            address = new Label("Your file name will show up here.");
+    private Label colL = new Label("Enter columns: ");
+    private TextField colT = new TextField();
+    private Label delL = new Label("Enter delimiter: ");
+    private TextField delT = new TextField();
+    private FileChooser fileChooser;
 
     public static void main (String[] args) throws IOException, WriteException {
 //        ExcelReader er = new ExcelReader("input.xls");
-        ExcelGenerator eg = new ExcelGenerator("new_output.xls");
+//        ExcelGenerator eg = new ExcelGenerator("new_output.xls");
 //        er.readSheet(0);
 //        int[] indices = new int[]{1, 2, 3};
 //        String[][] content = er.getSheet();
@@ -112,8 +46,125 @@ public class ExcellSpliter {
 //        ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
 //        tableArr.add(toTable(arrCon, content, indices));
 //        eg.createFile(tableArr);
-        CSVOrganizer organizer = new CSVOrganizer("input.csv");
-        organizer.process(1);
+//        CSVOrganizer organizer = new CSVOrganizer("input.csv");
+//        organizer.process(1);
+//        ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
+//        tableArr.add(organizer.exportAsExcelTable());
+//        eg.createFile(tableArr);
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Scene scene = new Scene(getPane(), 450, 350);
+        primaryStage.setTitle("Excel Cell Split");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private Pane getPane() {
+        VBox result = new VBox(10);
+        result.setAlignment(Pos.CENTER);
+        HBox hBox1 = new HBox(5),
+                hBox2 = new HBox(5);
+
+        result.getChildren().addAll(bt1, address, hBox1, hBox2, bt2, label);
+
+
+        hBox1.getChildren().addAll(colL, colT);
+        hBox1.setAlignment(Pos.CENTER);
+        hBox1.setMargin(colL, new Insets(3));
+        hBox1.setMargin(colT, new Insets(3));
+
+
+        hBox2.getChildren().addAll(delL, delT);
+        hBox2.setAlignment(Pos.CENTER);
+        hBox2.setMargin(delL, new Insets(3));
+        hBox2.setMargin(delT, new Insets(3));
+
+        fileChooser = new FileChooser();
+
+        bt1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                file = fileChooser.showOpenDialog(null);
+                address.setText(file.getName());
+                if (file.getName().endsWith(".xls")) {
+                    colL.setText("Enter target columns (separate by ,): ");
+                    delT.setEditable(true);
+                } else if (file.getName().endsWith(".csv")){
+                    colL.setText("Enter how many columns to ignore: ");
+                    delT.setEditable(false);
+                } else {
+                    colL.setText("Enter columns: ");
+                    delT.setEditable(true);
+                    address.setText("This file's format is not valid.");
+                }
+            }
+        });
+
+        bt2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String addIn = file.getAbsolutePath();
+                String addOut = addIn.substring(0, addIn.lastIndexOf("."));
+                addOut += "_split.xls";
+                if (addIn.endsWith(".xls")) {
+                    try {
+                        forExcel(addOut, colT.getText(), delT.getText());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WriteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        forCSV(addOut, colT.getText());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WriteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                label.setText("Your output is at: " + addOut);
+            }
+        });
+
+        for (int i = 0; i < result.getChildren().size(); i++) {
+            Node child = result.getChildren().get(i);
+            result.setMargin(child, new Insets(5));
+        }
+        return result;
+    }
+
+    private void forExcel (String out, String sIndices, String delimiter) throws IOException, WriteException {
+        ExcelReader er = new ExcelReader(file.getAbsoluteFile());
+        ExcelGenerator eg = new ExcelGenerator(out);
+        er.readSheet(0);
+        int[] indices;
+        StringTokenizer stk = new StringTokenizer(sIndices, ",");
+        indices = new int[stk.countTokens()];
+        int i = 0;
+        while (stk.hasMoreTokens()) {
+            int j = Integer.parseInt(stk.nextToken()) - 1;
+            indices[i] = j;
+            i++;
+        }
+        String[][] content = er.getSheet();
+        System.out.println(indices.length);
+        for (int x=0; x<indices.length;x++){
+            System.out.print(indices[x] +", ");
+        }
+        ArrayList<ArrayList<String>> arrCon = CellSplitor.spliteCells(content, indices, delimiter);
+        ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
+        tableArr.add(CellSplitor.toTable(arrCon, content, indices));
+        eg.createFile(tableArr);
+    }
+
+    private void forCSV (String out, String toNum) throws IOException, WriteException {
+        ExcelGenerator eg = new ExcelGenerator(out);
+        CSVOrganizer organizer = new CSVOrganizer(file.getAbsolutePath());
+        organizer.process(Integer.parseInt(toNum));
         ArrayList<ExcelTable> tableArr = new ArrayList<ExcelTable>();
         tableArr.add(organizer.exportAsExcelTable());
         eg.createFile(tableArr);
